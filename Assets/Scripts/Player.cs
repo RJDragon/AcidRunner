@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.UIElements;
@@ -5,18 +6,23 @@ using UnityEngine;
 using UnityEngine.Serialization;
 
 
+
 public class Player : MonoBehaviour
 {
     [SerializeField] private LayerMask _ground;
     [SerializeField] private float _pace = 5f;
     [SerializeField] private float _jumpHeight = 2f;
-    [SerializeField] private int _lives = 4;
-
+    [SerializeField] public int health = 3;
+    
     private float _gravity = -50f;
     private CharacterController _characterController;
     private float _yValue;
     private bool _groundCheck;
     private float _baseSpeed;
+
+    //antihealth as a variable to measure the health to later subtract it
+    public int antihealth = 0;
+    
 
     void Start()
     {
@@ -26,8 +32,18 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // different base speed (resulting in a different overall pace)
-        // to avoid getting hit or collect items
+        Speed();
+        GroundCheck();
+        Gravity();
+        PlayerMovement();
+        fellDown();
+        
+    }
+    
+    // different base speed (resulting in a different overall pace)
+    // to avoid getting hit or collect items
+    void Speed()
+    {
         if (_groundCheck && Input.GetButton("Fire1"))
         {
             _baseSpeed = 0.2f;
@@ -41,25 +57,22 @@ public class Player : MonoBehaviour
         else if (_groundCheck && Input.GetButton("Fire3"))
         {
             _baseSpeed = 1.65f;
-            _jumpHeight = 5f;
+            _jumpHeight = 3f;
         }
         else
         {
             _baseSpeed = 1f;
         }
+        
+    }
 
-        //transform.forward = new Vector3(horizontalInput, 0, Mathf.Abs(horizontalInput) - 1);
+    void GroundCheck()
+    {
         _groundCheck = Physics.CheckSphere(transform.position, 0.1f, _ground, QueryTriggerInteraction.Ignore);
+    }
 
-        //if (_groundCheck && velocity.y < 0)
-        //{
-        //    velocity.y = 0;
-        //}
-        //else
-        //{
-        //    velocity.y += _gravity * Time.deltaTime;
-        //}
-
+    void Gravity()
+    {
         if (_groundCheck)
         {
             _yValue = 0;
@@ -68,7 +81,20 @@ public class Player : MonoBehaviour
         {
             _yValue += _gravity * Time.deltaTime;
         }
+        
+        /*
+        if (_groundCheck && velocity.y < 0)
+        {
+            velocity.y = 0;
+        }
+        else
+        {
+           velocity.y += _gravity * Time.deltaTime;
+        }*/
+    }
 
+    void PlayerMovement()
+    {
         // Let the player jump
         if (_groundCheck && Input.GetButtonDown("Jump"))
         {
@@ -79,30 +105,41 @@ public class Player : MonoBehaviour
         // Move the player forward
         //_characterController.Move(new Vector3(horizontalInput * runSpeed, 0, 0) * Time.deltaTime);
         _characterController.Move(new Vector3(_baseSpeed * _pace, _yValue, 0) * Time.deltaTime);
-        // Let the player jump
-        //if (_groundCheck && Input.GetButtonDown("Jump"))
-        //{
-        //   
-        //    _rosenkohl.y += Mathf.Sqrt(jumpHeight * -2 * _gravity);
-        //}
 
-        // (Idee: Move the player up and down on y-axis)
-        //_characterController.Move(_rosenkohl * Time.deltaTime);
+        
     }
-    
-    public void Damage()
-    { 
-        _lives -= 1;
 
+    void fellDown()
+    {
+        // Player dies when falling down
+        if (transform.position.y < -30f)
+        {
+            FindObjectOfType<GameManager>().EndGame();
+        }
+    }
+    public void Damage()
+    {
+        // antihealth as a counter to reset health when dead
+        antihealth += 1;
+        health -= 1;
+        LivesCounter.livesCounter -= 1;
         //_colorChannel -= 0.5f;
         //_mpb.SetColor("_Color", new Color(_colorChannel, 0, _colorChannel, 1f));
         //this.GetComponent<Renderer>().SetPropertyBlock(_mpb);
 
-        if (_lives == 0)
+        if (health == 0)
         {
+            //Invoke("resetHealth", 1f);
+            FindObjectOfType<GameManager>().EndGame();
             //_spawnManager.GetComponent <SpawnManager>().onPlayerDeath();
-            Destroy(this.gameObject);
+            //Destroy(this.gameObject);
+            //FindObjectOfType<GameManager>().EndGame();
         }
     }
+
+    //void resetHealth()
+    //{
+      //  health = 3;
+    //}
 
 }

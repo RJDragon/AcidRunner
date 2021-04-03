@@ -17,6 +17,6 @@ public class CoinCounter : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        _score.text = "Score: " + scoreCounter;
+        _score.text = scoreCounter+ " Coins";
     }
 }
