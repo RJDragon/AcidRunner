@@ -19,7 +19,21 @@ public class Player : MonoBehaviour
     private float _yValue;
     private bool _groundCheck;
     private float _baseSpeed;
+    private float _timePassed;
+    private float _whenToPay = 1f;
+    
+    //immunity variables
+    public bool startImmune;
+    public float immuneTime;
+    public int vaccineHitBool;
+    
+    //crazy pills variables
+    public bool startCrazy;
+    public float crazyTime;
+    public bool crazyHit;
 
+    private bool _doWePay = true;
+    
     //antihealth as a variable to measure the health to later subtract it
     public int antihealth = 0;
     
@@ -27,6 +41,14 @@ public class Player : MonoBehaviour
     void Start()
     {
         _characterController = GetComponent<CharacterController>();
+        // immunity things:
+        vaccineHitBool = 0;
+        immuneTime = 0;
+        startImmune = false;
+        // crazy things:
+        startCrazy = false;
+        crazyHit = false;
+        crazyTime = 0f;
     }
 
     // Update is called once per frame
@@ -37,32 +59,126 @@ public class Player : MonoBehaviour
         Gravity();
         PlayerMovement();
         fellDown();
-        
+        Immune();
+        Crazy();
     }
     
     // different base speed (resulting in a different overall pace)
     // to avoid getting hit or collect items
     void Speed()
     {
-        if (_groundCheck && Input.GetButton("Fire1"))
+        /*if (_groundCheck &&Input.GetButton("Fire1"))
         {
+            
             _baseSpeed = 0.2f;
-            _jumpHeight = 1.8f;
+            _jumpHeight = 1.6f;
+
+            // _timePassed = Time.time;
+
+
+            // testing costs when influencing speed
+            //InvokeRepeating("paceCostsCoins", 0.5f, Time.deltaTime * 1f);
+
         }
-        else if (_groundCheck && Input.GetButton("Fire2"))
+        /*else if (_groundCheck && Input.GetButton("Fire2"))
         {
             _baseSpeed = 1.3f;
             _jumpHeight = 2.2f;
-        }
-        else if (_groundCheck && Input.GetButton("Fire3"))
+        }*/
+        /*else if (_groundCheck && Input.GetButton("Fire3"))
         {
             _baseSpeed = 1.65f;
-            _jumpHeight = 3f;
+            _jumpHeight = 3.5f;
+            
+            //_timePassed = Time.time;
+        }
+        else
+        {
+            _baseSpeed = 1f;
+        }*/
+
+        // paycheck when paceinfluence hold for 1sec
+        /*if (Input.GetButton("Fire1") || Input.GetButton("Fire3"))
+        {
+            _timePassed = Time.time;
+        }
+        if (Input.GetButton("Fire1") || Input.GetButton("Fire3"))
+        {
+            if (Time.time - _timePassed > _whenToPay)
+            {
+                CoinCounter.scoreCounter -= 3;
+                _timePassed = Time.time;
+            }
+        }*/
+        
+        // if crazyPill taken then go crazy
+        if (crazyHit)
+        {
+            _baseSpeed = 2.5f;
+            _jumpHeight = 4.5f;
+        }
+        // otherwise behave normally
+        else
+        {
+            if (CoinCounter.scoreCounter > 2 && Input.GetButton("Fire1"))
+        {
+
+            _baseSpeed = 0.2f;
+            _jumpHeight = 1.6f;
+            
+            // holding one sec already? pay every second of hold
+            if (Time.time - _timePassed > _whenToPay)
+            {
+                _doWePay = true;
+            }
+
+            // payment open every time you press (by making the variable true when stopping to press, allowing the payment by new press)
+            if (Input.GetButtonUp("Fire1"))
+            {
+                _doWePay = true;
+            }
+            
+            // influencing the speed costs 3 coins; starts the time counter here and makes sure it does not happen every frame with false
+            if (_doWePay == true)
+            {
+                _timePassed = Time.time;
+                CoinCounter.scoreCounter -= 3;
+                _doWePay = false;
+                
+            }
+            
+        }
+        // when we have at least 3 coins and press 3
+        else if (CoinCounter.scoreCounter > 2 && Input.GetButton("Fire3"))
+        {
+            _baseSpeed = 1.65f;
+            _jumpHeight = 3.5f;
+            // holding one sec already? pay every second of hold
+            if (Time.time - _timePassed > _whenToPay)
+            {
+                _doWePay = true;
+            }
+            // payment open every time you press (by making the variable true when stoping to press, allowing the payment by new press)
+            if (Input.GetButtonUp("Fire1"))
+            {
+                _doWePay = true;
+            }
+            // influencing the speed costs 3 coins; starts the time counter here and makes sure it does not happen every frame with false
+            if (_doWePay == true)
+            {
+                _timePassed = Time.time;
+                CoinCounter.scoreCounter -= 3;
+                _doWePay = false;
+                
+            }
+            //_timePassed = Time.time;
         }
         else
         {
             _baseSpeed = 1f;
         }
+        }
+        // when we have at least 3 coins and press 1
         
     }
 
@@ -136,10 +252,32 @@ public class Player : MonoBehaviour
             //FindObjectOfType<GameManager>().EndGame();
         }
     }
+    
 
-    //void resetHealth()
-    //{
-      //  health = 3;
-    //}
+    // immunity comes here:
+    void Immune()
+    {
+        if (Time.time - immuneTime > 7f)
+        {
+            startImmune = false;
+            vaccineHitBool = 0;
+        }
+        if (startImmune)
+        {
+            vaccineHitBool = 1;
+        }
+    }
 
+    void Crazy()
+    {
+        if (Time.time - crazyTime > 7f)
+        {
+            startCrazy = false;
+            crazyHit = false;
+        }
+        if (startCrazy)
+        {
+            crazyHit = true;
+        }
+    }
 }

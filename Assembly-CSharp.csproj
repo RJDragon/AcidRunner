@@ -55,14 +55,17 @@
      <Compile Include="Assets\Scripts\LivesCounter.cs" />
      <Compile Include="Assets\Scripts\FakeCube.cs" />
      <Compile Include="Assets\Scripts\SpecialCoin.cs" />
+     <Compile Include="Assets\Scripts\HighScore.cs" />
+     <Compile Include="Assets\Scripts\FireBall.cs" />
      <Compile Include="Assets\Scripts\CameraOnPlayer.cs" />
      <Compile Include="Assets\Scripts\AcidRain.cs" />
+     <Compile Include="Assets\Scripts\GoCrazyPill.cs" />
      <Compile Include="Assets\Scripts\Player.cs" />
+     <Compile Include="Assets\Scripts\GameManager.cs" />
+     <Compile Include="Assets\Scripts\Vaccine.cs" />
      <Compile Include="Assets\Scripts\CoinCounter.cs" />
      <Compile Include="Assets\Scripts\DistanceFromStart.cs" />
      <Compile Include="Assets\Scripts\Coin.cs" />
-     <Compile Include="Assets\Scripts\GameManager.cs" />
-     <Compile Include="Assets\Scripts\HighScore.cs" />
  <Reference Include="UnityEngine">
  <HintPath>C:/Program Files/Unity/Hub/Editor/2020.3.0f1/Editor/Data/Managed/UnityEngine/UnityEngine.dll</HintPath>
  </Reference>
