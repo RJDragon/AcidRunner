@@ -58,6 +58,7 @@
      <Compile Include="Assets\Scripts\HighScore.cs" />
      <Compile Include="Assets\Scripts\FireBall.cs" />
      <Compile Include="Assets\Scripts\CameraOnPlayer.cs" />
+     <Compile Include="Assets\Scripts\Animations.cs" />
      <Compile Include="Assets\Scripts\AcidRain.cs" />
      <Compile Include="Assets\Scripts\GoCrazyPill.cs" />
      <Compile Include="Assets\Scripts\Player.cs" />

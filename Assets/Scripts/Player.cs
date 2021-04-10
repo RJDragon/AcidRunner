@@ -36,11 +36,14 @@ public class Player : MonoBehaviour
     
     //antihealth as a variable to measure the health to later subtract it
     public int antihealth = 0;
+
+    private float _timeAnimation;
     
 
     void Start()
     {
         _characterController = GetComponent<CharacterController>();
+        
         // immunity things:
         vaccineHitBool = 0;
         immuneTime = 0;
@@ -61,6 +64,10 @@ public class Player : MonoBehaviour
         fellDown();
         Immune();
         Crazy();
+        if (Time.time - _timeAnimation > 0.1f)
+        {
+            GameObject.Find("kaya").GetComponent<Animations>().animator.SetBool("isDamage", false);
+        }
     }
     
     // different base speed (resulting in a different overall pace)
@@ -116,8 +123,10 @@ public class Player : MonoBehaviour
         {
             _baseSpeed = 2.5f;
             _jumpHeight = 4.5f;
+            GameObject.Find("kaya").GetComponent<Animations>().animator.SetBool("isCrazy", true);
         }
         // otherwise behave normally
+        // slow with at least 3 coins
         else
         {
             if (CoinCounter.scoreCounter > 2 && Input.GetButton("Fire1"))
@@ -125,7 +134,8 @@ public class Player : MonoBehaviour
 
             _baseSpeed = 0.2f;
             _jumpHeight = 1.6f;
-            
+            GameObject.Find("kaya").GetComponent<Animations>().animator.SetBool("isSlow", true);
+            GameObject.Find("kaya").GetComponent<Animations>().animator.SetBool("isSprint", false);
             // holding one sec already? pay every second of hold
             if (Time.time - _timePassed > _whenToPay)
             {
@@ -148,11 +158,13 @@ public class Player : MonoBehaviour
             }
             
         }
-        // when we have at least 3 coins and press 3
+        // when we have at least 3 coins and press 3, fast
         else if (CoinCounter.scoreCounter > 2 && Input.GetButton("Fire3"))
         {
             _baseSpeed = 1.65f;
             _jumpHeight = 3.5f;
+            GameObject.Find("kaya").GetComponent<Animations>().animator.SetBool("isSprint", true);
+            GameObject.Find("kaya").GetComponent<Animations>().animator.SetBool("isSlow", false);
             // holding one sec already? pay every second of hold
             if (Time.time - _timePassed > _whenToPay)
             {
@@ -173,9 +185,13 @@ public class Player : MonoBehaviour
             }
             //_timePassed = Time.time;
         }
-        else
+            // base speed and jump
+            else
         {
             _baseSpeed = 1f;
+            _jumpHeight = 2f;
+            GameObject.Find("kaya").GetComponent<Animations>().animator.SetBool("isSlow", false);
+            GameObject.Find("kaya").GetComponent<Animations>().animator.SetBool("isSprint", false);
         }
         }
         // when we have at least 3 coins and press 1
@@ -214,10 +230,15 @@ public class Player : MonoBehaviour
         // Let the player jump
         if (_groundCheck && Input.GetButtonDown("Jump"))
         {
+            GameObject.Find("kaya").GetComponent<Animations>().animator.SetBool("isJump", true);
 
             _yValue += Mathf.Sqrt(_jumpHeight * -2 * _gravity);
         }
 
+        if (!_groundCheck)
+        {
+            GameObject.Find("kaya").GetComponent<Animations>().animator.SetBool("isJump", false);
+        }
         // Move the player forward
         //_characterController.Move(new Vector3(horizontalInput * runSpeed, 0, 0) * Time.deltaTime);
         _characterController.Move(new Vector3(_baseSpeed * _pace, _yValue, 0) * Time.deltaTime);
@@ -230,6 +251,7 @@ public class Player : MonoBehaviour
         // Player dies when falling down
         if (transform.position.y < -30f)
         {
+            GameObject.Find("kaya").GetComponent<Animations>().animator.SetBool("isFalling", true);
             FindObjectOfType<GameManager>().EndGame();
         }
     }
@@ -242,7 +264,9 @@ public class Player : MonoBehaviour
         //_colorChannel -= 0.5f;
         //_mpb.SetColor("_Color", new Color(_colorChannel, 0, _colorChannel, 1f));
         //this.GetComponent<Renderer>().SetPropertyBlock(_mpb);
-
+        GameObject.Find("kaya").GetComponent<Animations>().animator.SetBool("isDamage", true);
+        _timeAnimation = Time.time;
+        
         if (health == 0)
         {
             //Invoke("resetHealth", 1f);
@@ -250,6 +274,7 @@ public class Player : MonoBehaviour
             //_spawnManager.GetComponent <SpawnManager>().onPlayerDeath();
             //Destroy(this.gameObject);
             //FindObjectOfType<GameManager>().EndGame();
+            GameObject.Find("kaya").GetComponent<Animations>().animator.SetBool("isDead", true);
         }
     }
     
@@ -274,6 +299,7 @@ public class Player : MonoBehaviour
         {
             startCrazy = false;
             crazyHit = false;
+            GameObject.Find("kaya").GetComponent<Animations>().animator.SetBool("isCrazy", false);
         }
         if (startCrazy)
         {

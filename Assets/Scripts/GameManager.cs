@@ -13,10 +13,10 @@ public class GameManager : MonoBehaviour
             gameHasEnded = true;
             Debug.Log("Game Over");
             //Invoke gives us a delay of the called methods; here resetting the counters and then restarting the game
-            Invoke("resetVal", 1f);
+            Invoke("resetVal", 2.5f);
             //personal highscore updating
-            Invoke("comparingScore",1f);
-            Invoke("Restart", 1f);
+            Invoke("comparingScore",2.5f);
+            Invoke("Restart", 2.5f);
             
         }
     }
@@ -32,6 +32,9 @@ public class GameManager : MonoBehaviour
         CoinCounter.scoreCounter = 0;
         GetComponent<Player>().health += GetComponent<Player>().antihealth;
         LivesCounter.livesCounter += GetComponent<Player>().antihealth;
+        GameObject.Find("kaya").GetComponent<Animations>().animator.SetBool("isDead", false);
+        GameObject.Find("kaya").GetComponent<Animations>().animator.SetBool("isFalling", false);
+        
     }
     
     void comparingScore()

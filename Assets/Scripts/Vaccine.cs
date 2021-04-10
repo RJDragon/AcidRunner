@@ -33,6 +33,7 @@ public class Vaccine : MonoBehaviour
             GameObject.Find("Player").GetComponent<Player>().startImmune = true;
             
             other.GetComponent<Player>().health += 1;
+            other.GetComponent<Player>().antihealth -= 1;
             LivesCounter.livesCounter += 1;
             
             
