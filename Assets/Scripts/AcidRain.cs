@@ -21,7 +21,7 @@ public class AcidRain : MonoBehaviour
         transform.Translate(Vector3.down * _speed * Time.deltaTime);
         if (transform.position.y < -25f)
         {
-            transform.position = new Vector3(Random.Range(-10f, 150f), 15f, 0f);
+            transform.position = new Vector3(Random.Range(-10f, 3300f), 40f, 0f);
         }
         //CheckHit();
     }

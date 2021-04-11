@@ -18,9 +18,9 @@ public class Player : MonoBehaviour
     private CharacterController _characterController;
     private float _yValue;
     private bool _groundCheck;
-    private float _baseSpeed;
     private float _timePassed;
     private float _whenToPay = 1f;
+    public float baseSpeed;
     
     //immunity variables
     public bool startImmune;
@@ -121,7 +121,7 @@ public class Player : MonoBehaviour
         // if crazyPill taken then go crazy
         if (crazyHit)
         {
-            _baseSpeed = 2.5f;
+            baseSpeed = 2.5f;
             _jumpHeight = 4.5f;
             GameObject.Find("kaya").GetComponent<Animations>().animator.SetBool("isCrazy", true);
         }
@@ -132,7 +132,7 @@ public class Player : MonoBehaviour
             if (CoinCounter.scoreCounter > 2 && Input.GetButton("Fire1"))
         {
 
-            _baseSpeed = 0.2f;
+            baseSpeed = 0.2f;
             _jumpHeight = 1.6f;
             GameObject.Find("kaya").GetComponent<Animations>().animator.SetBool("isSlow", true);
             GameObject.Find("kaya").GetComponent<Animations>().animator.SetBool("isSprint", false);
@@ -161,7 +161,7 @@ public class Player : MonoBehaviour
         // when we have at least 3 coins and press 3, fast
         else if (CoinCounter.scoreCounter > 2 && Input.GetButton("Fire3"))
         {
-            _baseSpeed = 1.65f;
+            baseSpeed = 1.65f;
             _jumpHeight = 3.5f;
             GameObject.Find("kaya").GetComponent<Animations>().animator.SetBool("isSprint", true);
             GameObject.Find("kaya").GetComponent<Animations>().animator.SetBool("isSlow", false);
@@ -185,13 +185,17 @@ public class Player : MonoBehaviour
             }
             //_timePassed = Time.time;
         }
+            
             // base speed and jump
             else
+            {
+                baseSpeed = 1f;
+                _jumpHeight = 2f;
+                GameObject.Find("kaya").GetComponent<Animations>().animator.SetBool("isSlow", false);
+                GameObject.Find("kaya").GetComponent<Animations>().animator.SetBool("isSprint", false);
+            }
         {
-            _baseSpeed = 1f;
-            _jumpHeight = 2f;
-            GameObject.Find("kaya").GetComponent<Animations>().animator.SetBool("isSlow", false);
-            GameObject.Find("kaya").GetComponent<Animations>().animator.SetBool("isSprint", false);
+            
         }
         }
         // when we have at least 3 coins and press 1
@@ -241,7 +245,7 @@ public class Player : MonoBehaviour
         }
         // Move the player forward
         //_characterController.Move(new Vector3(horizontalInput * runSpeed, 0, 0) * Time.deltaTime);
-        _characterController.Move(new Vector3(_baseSpeed * _pace, _yValue, 0) * Time.deltaTime);
+        _characterController.Move(new Vector3(baseSpeed * _pace, _yValue, 0) * Time.deltaTime);
 
         
     }

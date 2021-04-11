@@ -1,10 +1,17 @@
+using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
     private bool gameHasEnded = false;
-    
+    public bool stopMoving;
+
+    /*private void Start()
+    {
+        stopMoving = false;
+    }*/
+
     public void EndGame()
     {
         if (gameHasEnded == false)
@@ -12,6 +19,7 @@ public class GameManager : MonoBehaviour
             //if statement with bool prevents looping;
             gameHasEnded = true;
             Debug.Log("Game Over");
+            //StopMoving();
             //Invoke gives us a delay of the called methods; here resetting the counters and then restarting the game
             Invoke("resetVal", 2.5f);
             //personal highscore updating
@@ -34,7 +42,7 @@ public class GameManager : MonoBehaviour
         LivesCounter.livesCounter += GetComponent<Player>().antihealth;
         GameObject.Find("kaya").GetComponent<Animations>().animator.SetBool("isDead", false);
         GameObject.Find("kaya").GetComponent<Animations>().animator.SetBool("isFalling", false);
-        
+        //SetFalse();
     }
     
     void comparingScore()
@@ -44,4 +52,15 @@ public class GameManager : MonoBehaviour
             HighScore.highScore = GetComponent<DistanceFromStart>().distance;
         }
     }
+
+    /*void StopMoving()
+    {
+        stopMoving = true;
+        GameObject.Find("Player").GetComponent<Player>().baseSpeed = 0f;
+    }
+
+    void SetFalse()
+    {
+        stopMoving = false;
+    }*/
 }
