@@ -7,23 +7,26 @@ using TMPro;
 
 public class DistanceFromStart : MonoBehaviour
 {
+    // creating a reference variable for the distance
     [SerializeField] private Transform _checkpoint;
-    //[SerializeField] private Text _distanceText;
+    // init. textmeshpro text
     [SerializeField] private TextMeshProUGUI _textPro;
 
+    //variable storing the distance between reference object and player
     public float distance;
 
     void Update()
     {
+        // variable storing the distance between reference object and player
         distance = transform.position.x - _checkpoint.transform.position.x;
 
-        //_distanceText.text = "Distance: " + distance.ToString("F1") + " meters";
-
+        // displays the distance with a string. format says how many digits after comma
         _textPro.text = "Distance: " + distance.ToString("F1") + " m";
         
+        // initial text when player is in front of object
         if (distance <= 0)
         {
-           // _distanceText.text = "Start!";
+           // Start!
             _textPro.text = "Start!";
         }
     }

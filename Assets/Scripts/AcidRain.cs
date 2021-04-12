@@ -4,35 +4,34 @@ using UnityEngine;
 
 public class AcidRain : MonoBehaviour
 {
+    //variables to play with in the inspector. also this way we have different paced rains
     [SerializeField] private float _speed = 5f;
     [SerializeField] private float _causeDamageRate = 2f;
     private float _canCauseDamage = -1f;
+    
+    // variable public, as there are methods relying on the fact if the player was hit by the rain
     public bool vaccineHit;
     
     // Start is called before the first frame update
     void Start()
     {
+        // default: player is not hit by rain
         vaccineHit = false;
     }
 
     // Update is called once per frame
     void Update()
     {
+        // let it rain: rain just moves down
         transform.Translate(Vector3.down * _speed * Time.deltaTime);
+        // the amount of rain is set in the scene; but we did not want to hardcore its position. therefore when it went down,
+        // it starts randomly globally over the map
         if (transform.position.y < -25f)
         {
             transform.position = new Vector3(Random.Range(-10f, 3300f), 40f, 0f);
         }
-        //CheckHit();
+        
     }
-
-    /*void CheckHit()
-    {
-        if (GetComponent<Player>().vaccineHitBool==1)
-        {
-            vaccineHit = true;
-        }
-    }*/
 
     void OnTriggerEnter(Collider other)
     {
@@ -41,39 +40,24 @@ public class AcidRain : MonoBehaviour
         {
             _canCauseDamage = Time.time + _causeDamageRate;
 
+            // when the player is vaccinated
             if (GameObject.Find("Player").GetComponent<Player>().vaccineHitBool==1)
             {
                 vaccineHit = true;
             }
+            // just apply damage if the player is not vaccinated
             if (vaccineHit == false)
             {
-                /*other.GetComponent<Player>().health += 1;
-                LivesCounter.livesCounter += 1;*/
+                
                 other.GetComponent<Player>().Damage();
             }
-            //other.GetComponent<Player>().Damage();
+            // destroy the rain after it hit the player
             Destroy(this.gameObject);
         }
 
         
-        /*//if the other one is the vaccine
-        else if (other.CompareTag("Vaccine"))
-        {   
-            Debug.LogWarning("hitting corona with vaccine");
-            Destroy(other.gameObject);
-            Destroy(this.gameObject);
-        }*/
+        
     }
 
-    /*public void VaccineHit()
-    {
-        void OnTriggerEnter(Collider other)
-        {
-            // if the object we collide with is the player
-            if (other.CompareTag("Player"))
-            {
-                GetComponent<Player>().health += 1;
-            }
-        }
-    }*/
+   
 }

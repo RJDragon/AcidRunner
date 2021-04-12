@@ -4,20 +4,17 @@ using UnityEngine;
 
 public class SpecialCoin : MonoBehaviour
 {
+    // how fast should the coin fly down
     [SerializeField] 
     private float _speed = 5f;
     
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
+    
     void Update()
     {
-        //transform.Rotate(90 * Time.deltaTime, 0, 0, Space.Self);
+        // moves coin down
         transform.Translate(Vector3.left * _speed * Time.deltaTime);
+        
+        // coins are prespawned out of sight on the left of the map in the scene. if they are low enough, they spawn randomly and globally in the sky
         if (transform.position.y < -25f)
         {
             transform.position = new Vector3(Random.Range(-10f, 3300f), 40f, 0f);
@@ -27,10 +24,12 @@ public class SpecialCoin : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        // if hit by player
         if (other.CompareTag("Player"))
         {
+            // give +3 coins
             CoinCounter.scoreCounter += 3;
-            // should destroy the coin
+            // destroy the coin
             Destroy(gameObject);
         }
     }

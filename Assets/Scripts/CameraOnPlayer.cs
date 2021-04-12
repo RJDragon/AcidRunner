@@ -13,7 +13,7 @@ public class CameraOnPlayer : MonoBehaviour
     
     void Start()
     {
-        //(idee: creating a position depending on the player- but why?)
+        //creating a position depending on the player
          _rosenkohl = transform.position - target.position;
     }
     // Late Update is called after Update, this allows for an execution order

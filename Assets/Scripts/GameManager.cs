@@ -4,13 +4,9 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
+    // bool to state if game has ended
     private bool gameHasEnded = false;
-    public bool stopMoving;
-
-    /*private void Start()
-    {
-        stopMoving = false;
-    }*/
+    
 
     public void EndGame()
     {
@@ -18,12 +14,14 @@ public class GameManager : MonoBehaviour
         {
             //if statement with bool prevents looping;
             gameHasEnded = true;
+            // message game over in console
             Debug.Log("Game Over");
-            //StopMoving();
-            //Invoke gives us a delay of the called methods; here resetting the counters and then restarting the game
+            // using invoke so we have time for death and falling animation
+            // resetting values (see below)
             Invoke("resetVal", 2.5f);
             //personal highscore updating
             Invoke("comparingScore",2.5f);
+            // actual restart
             Invoke("Restart", 2.5f);
             
         }
@@ -31,6 +29,7 @@ public class GameManager : MonoBehaviour
 
     void Restart()
     {
+        // restart the game
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
@@ -40,27 +39,19 @@ public class GameManager : MonoBehaviour
         CoinCounter.scoreCounter = 0;
         GetComponent<Player>().health += GetComponent<Player>().antihealth;
         LivesCounter.livesCounter += GetComponent<Player>().antihealth;
+        // stopping death and flying animations
         GameObject.Find("kaya").GetComponent<Animations>().animator.SetBool("isDead", false);
         GameObject.Find("kaya").GetComponent<Animations>().animator.SetBool("isFalling", false);
-        //SetFalse();
+        
     }
     
     void comparingScore()
     {
+        // when player reached a higher score than before
         if (GetComponent<DistanceFromStart>().distance > HighScore.highScore)
         {
+            // set new highscore to score just reached
             HighScore.highScore = GetComponent<DistanceFromStart>().distance;
         }
     }
-
-    /*void StopMoving()
-    {
-        stopMoving = true;
-        GameObject.Find("Player").GetComponent<Player>().baseSpeed = 0f;
-    }
-
-    void SetFalse()
-    {
-        stopMoving = false;
-    }*/
 }

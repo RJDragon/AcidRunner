@@ -6,32 +6,19 @@ using UnityEngine;
 public class Vaccine : MonoBehaviour
 {
     
-    /*private void Start()
-    {
-        _startImmune = false;
-    }*/
-
-    /*void Update()
-    {
-        transform.Rotate(90 * Time.deltaTime, 0, 0);
-        /*if (Time.time - _immuneTime > 7f)
-        {
-            _startImmune = false;
-        }
-        if (_startImmune)
-        {
-            vaccineHitbool = 1;
-        }*/
-        
-    //}*/
+    
 
     private void OnTriggerEnter(Collider other)
     {
+        // when player hits medikit aka vaccine
         if (other.CompareTag("Player"))
         {
+            // init. time variable with time of collision
             GameObject.Find("Player").GetComponent<Player>().immuneTime = Time.time;
+            // say the player script that the player hit the vaccine
             GameObject.Find("Player").GetComponent<Player>().startImmune = true;
             
+            // health +1
             other.GetComponent<Player>().health += 1;
             other.GetComponent<Player>().antihealth -= 1;
             LivesCounter.livesCounter += 1;
